@@ -19,7 +19,7 @@ import Data.Int (Int64)
 import Data.Proxy (Proxy (..))
 import Data.Monoid ((<>))
 import Data.Word (Word8)
-import Data.Reflection (Reifies, reflect, reifyNat)
+import Data.Reflection (reflect)
 import GHC.TypeLits (KnownNat, CmpNat)
 import GHC.Types (Nat)
 import Prelude hiding (null, length, splitAt)
@@ -35,7 +35,7 @@ stuff bs = Stuffed $ toLazyByteString $ mconcat chunks
         chunks = map (buildStuffed excluded) $ splitEvery 254 bs
 
 splitEvery :: Int64 -> ByteString -> [ByteString]
-splitEvery n "" = []
+splitEvery _ "" = []
 splitEvery n bs = start : splitEvery n rest
     where
         (start, rest) = splitAt n bs
@@ -56,7 +56,7 @@ unstuff :: forall a. (KnownNat a) => Stuffed a -> ByteString
 unstuff (Stuffed bs) = toLazyByteString $ mconcat chunks
     where
         excluded = fromIntegral (reflect (Proxy :: Proxy a) :: Integer)
-        rebuild bs = rebuildChunk excluded (uncons bs) mempty
+        rebuild bytes = rebuildChunk excluded (uncons bytes) mempty
         chunks = map rebuild $ splitEvery 255 bs
 
 rebuildChunk :: Word8 -> Maybe (Word8, ByteString) -> Builder -> Builder
