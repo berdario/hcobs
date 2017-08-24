@@ -5,8 +5,8 @@ let
   inherit (nixpkgs) pkgs;
 
   f = { mkDerivation, base, base64-bytestring, bytestring
-      , containers, criterion, ghc-prim, hedgehog, mmorph, mtl
-      , reflection, stdenv
+      , containers, criterion, deepseq, ghc-prim, hedgehog, mmorph, mtl
+      , reflection, stdenv, weigh
       }:
       mkDerivation {
         pname = "hcobs";
@@ -16,7 +16,8 @@ let
           base bytestring containers ghc-prim reflection
         ];
         testHaskellDepends = [
-          base bytestring ghc-prim hedgehog mmorph mtl reflection
+          base base64-bytestring bytestring deepseq ghc-prim hedgehog mmorph
+          mtl reflection weigh
         ];
         benchmarkHaskellDepends = [
           base base64-bytestring bytestring criterion ghc-prim reflection

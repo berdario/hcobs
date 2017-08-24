@@ -2,6 +2,7 @@
 {-# LANGUAGE TypeInType #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE GADTs #-}
 
 module Data.Stuffed
@@ -20,13 +21,14 @@ import Data.Proxy (Proxy (..))
 import Data.Monoid ((<>))
 import Data.Word (Word8)
 import Data.Reflection (reflect)
+import GHC.Generics (Generic)
 import GHC.TypeLits (KnownNat, CmpNat)
 import GHC.Types (Nat)
 import Prelude hiding (null, length, splitAt)
 
 
 newtype Stuffed (a :: Nat) = Stuffed ByteString
-    deriving (Eq, Ord, Show, Monoid)
+    deriving (Eq, Ord, Show, Monoid, Generic)
 
 stuff :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => ByteString -> Stuffed a
 stuff bs = Stuffed $ toLazyByteString $ mconcat chunks
