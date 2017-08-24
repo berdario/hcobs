@@ -1,5 +1,1 @@
 language: nix
-
-cache:
-  directories:
-  - /nix/store
