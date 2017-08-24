@@ -39,7 +39,7 @@ main = do
                         stuffedProperty (bytesAndExclusion 0) notContains) ]
     unless result exitFailure
 
-type Generator = Gen Identity (ByteString, Word8)
+type Generator = Gen (ByteString, Word8)
 
 bytesAndExclusion :: Int -> Generator
 bytesAndExclusion minSize = (,) <$> (fromStrict <$> bytes (constant minSize 1100)) <*> word8 constantBounded
@@ -51,7 +51,7 @@ smallerThan256 = if n < 256
     where
         n = reflect (Proxy :: Proxy a)
 
-stuffedProperty :: Generator -> (forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => Word8 -> ByteString -> Proxy a -> Test Identity ()) -> Property
+stuffedProperty :: Generator -> (forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => Word8 -> ByteString -> Proxy a -> PropertyT Identity ()) -> Property
 stuffedProperty gen prop = property $ hoist generalize $ do
     (x, w) <- forAll gen
     reifyNat (fromIntegral w) $ \(p :: Proxy n) ->
@@ -61,17 +61,17 @@ stuffedProperty gen prop = property $ hoist generalize $ do
 
 
 
-roundTrips :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => ByteString -> Proxy a -> Test Identity ()
+roundTrips :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => ByteString -> Proxy a -> PropertyT Identity ()
 roundTrips bs _ = bs === unstuff (stuff bs :: Stuffed a)
 
-biggerBy1Every254 :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => ByteString -> Proxy a -> Test Identity ()
+biggerBy1Every254 :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => ByteString -> Proxy a -> PropertyT Identity ()
 biggerBy1Every254 bs _ = length stf === inputL + ((inputL `div` 255) + inputL) `div` 255 + 1
     where
         stf = unwrap (stuff bs :: Stuffed a)
         inputL = length bs
 
 
-notContains :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => Word8 -> ByteString -> Proxy a -> Test Identity ()
+notContains :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => Word8 -> ByteString -> Proxy a -> PropertyT Identity ()
 notContains i bs _ = assert $ i `notElem` stf
     where
         stf = unwrap (stuff bs :: Stuffed a)
