@@ -45,7 +45,7 @@ bytesAndExclusion :: Int -> Generator
 bytesAndExclusion minSize = (,) <$> (fromStrict <$> bytes (constant minSize 1100)) <*> word8 constantBounded
 
 smallerThan256 :: forall a. (KnownNat a) => Maybe (Dict (KnownNat a, CmpNat a 256 ~ 'LT))
-smallerThan256 = if (n < 256)
+smallerThan256 = if n < 256
         then Just $ unsafeCoerce (Dict :: Dict (KnownNat a, 'LT ~ 'LT))
         else Nothing
     where
@@ -57,7 +57,7 @@ stuffedProperty gen prop = property $ hoist generalize $ do
     reifyNat (fromIntegral w) $ \(p :: Proxy n) ->
         case smallerThan256 of
             Nothing -> failure
-            (Just (Dict :: Dict (KnownNat n, CmpNat n 256 ~ 'LT))) -> (prop w x p)
+            (Just (Dict :: Dict (KnownNat n, CmpNat n 256 ~ 'LT))) -> prop w x p
 
 
 
@@ -65,7 +65,7 @@ roundTrips :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => ByteString -> Proxy 
 roundTrips bs _ = bs === unstuff (stuff bs :: Stuffed a)
 
 biggerBy1Every254 :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => ByteString -> Proxy a -> Test Identity ()
-biggerBy1Every254 bs _ = length stf === inputL + (inputL) `div` 255 + 1
+biggerBy1Every254 bs _ = length stf === inputL + ((inputL `div` 255) + inputL) `div` 255 + 1
     where
         stf = unwrap (stuff bs :: Stuffed a)
         inputL = length bs
