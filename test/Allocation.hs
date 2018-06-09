@@ -16,15 +16,6 @@ instance NFData (Stuffed a)
 stuffZero :: _ -> Stuffed 0
 stuffZero = stuff
 
-stuffZero' :: _ -> Stuffed 0
-stuffZero' = stuff'
-
-stuffZero'' :: _ -> Stuffed 0
-stuffZero'' = stuff''
-
-stuffZero''' :: _ -> Stuffed 0
-stuffZero''' = stuff'''
-
 main :: IO ()
 main = do
     let stuffedAll = stuffZero allBytes
@@ -37,13 +28,8 @@ main = do
     evaluate $!! encode $ toStrict zeros
     mainWith $ do
         func "stuff/empty" stuffZero ""
-        func "stuffThird/empty" stuffZero''' ""
         func "stuff/allbytes" stuffZero allBytes
-        func "stuffThird/allbytes" stuffZero''' allBytes
         func "stuff/allzeros" stuffZero zeros
-        func "stuffprime/allzeros" stuffZero' zeros
-        func "stuffsecond/allzeros" stuffZero'' zeros
-        func "stuffthird/allzeros" stuffZero''' zeros
         func "base64encode/empty" encode ""
         func "base64encode/allbytes" encode $ toStrict allBytes
         func "base64encode/allzeros" encode $ toStrict zeros

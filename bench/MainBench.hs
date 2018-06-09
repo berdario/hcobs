@@ -12,10 +12,6 @@ import           Prelude              hiding (concat)
 import           System.IO.Unsafe     (unsafePerformIO)
 
 stuffedRt = unstuff . (stuff :: _ -> Stuffed 0)
-stuffedPrimeRt = unstuff . (stuff' :: _ -> Stuffed 0)
-stuffedSecondRt = unstuff . (stuff'' :: _ -> Stuffed 0)
-stuffedThirdRt = unstuff . (stuff''' :: _ -> Stuffed 0)
--- stringRt = read . show
 cStringRt = fromStrict . unsafePerformIO . flip useAsCStringLen packCStringLen . toStrict
 base64Rt = fromStrict . (\(Right x) -> x) . decode . encode . toStrict
 
@@ -28,10 +24,6 @@ benchStuffing roundTrip =
 
 main = defaultMain [
       bgroup "stuff/unstuff" $ benchStuffing stuffedRt
-    , bgroup "stuffPrime/unstuff" $ benchStuffing stuffedPrimeRt
-    , bgroup "stuffSecond/unstuff" $ benchStuffing stuffedSecondRt
-    , bgroup "stuffThird/unstuff" $ benchStuffing stuffedThirdRt
-    -- , bgroup "show/read" $ benchStuffing stringRt
     , bgroup "base64" $ benchStuffing base64Rt
     , bgroup "asCString/packCString" $ benchStuffing cStringRt
     ]
