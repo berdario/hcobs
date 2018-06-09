@@ -22,21 +22,28 @@ import System.Exit (exitFailure)
 import Unsafe.Coerce (unsafeCoerce)
 import System.IO.Unsafe
 
-import Data.Stuffed (Stuffed, stuff, unstuff, unwrap)
+import Data.Stuffed (Stuffed, stuff, stuff', stuff'', stuff''', unstuff, unwrap)
 
 data Dict (c :: Constraint) where
     Dict :: (c) => Dict c
 
 main :: IO ()
 main = do
-    result <- checkParallel $ Group "Stuffed properties"
+    stuffTests stuff "Stuffed properties 0"
+    stuffTests stuff' "Stuffed properties 1"
+    stuffTests stuff'' "Stuffed properties 2"
+    stuffTests stuff''' "Stuffed properties 3"
+
+stuffTests :: (forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => ByteString -> Stuffed a) -> GroupName -> IO ()
+stuffTests stuff name = do
+    result <- checkParallel $ Group name
                     [ ("roundtrips",
-                        stuffedProperty (bytesAndExclusion 0) (const roundTrips))
+                        stuffedProperty (bytesAndExclusion 0) (const $ roundTrips stuff))
                     , ("1 byte bigger every 254",
                         withTests 1000 $
-                        stuffedProperty (bytesAndExclusion 1) (const biggerBy1Every254))
+                        stuffedProperty (bytesAndExclusion 1) (const $ biggerBy1Every254 stuff))
                     , ("Doesn't contain the excluded byte",
-                        stuffedProperty (bytesAndExclusion 0) notContains) ]
+                        stuffedProperty (bytesAndExclusion 0) (notContains stuff) ) ]
     unless result exitFailure
 
 type Generator = Gen (ByteString, Word8)
@@ -61,18 +68,18 @@ stuffedProperty gen prop = property $ hoist generalize $ do
 
 
 
-roundTrips :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => ByteString -> Proxy a -> PropertyT Identity ()
-roundTrips bs _ = bs === unstuff (stuff bs :: Stuffed a)
+roundTrips :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => (ByteString -> Stuffed a) -> ByteString -> Proxy a -> PropertyT Identity ()
+roundTrips stuff bs _ = bs === unstuff (stuff bs :: Stuffed a)
 
-biggerBy1Every254 :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => ByteString -> Proxy a -> PropertyT Identity ()
-biggerBy1Every254 bs _ = length stf === inputL + ((inputL `div` 255) + inputL) `div` 255 + 1
+biggerBy1Every254 :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => (ByteString -> Stuffed a) -> ByteString -> Proxy a -> PropertyT Identity ()
+biggerBy1Every254 stuff bs _ = length stf === inputL + ((inputL `div` 255) + inputL) `div` 255 + 1
     where
         stf = unwrap (stuff bs :: Stuffed a)
         inputL = length bs
 
 
-notContains :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => Word8 -> ByteString -> Proxy a -> PropertyT Identity ()
-notContains i bs _ = assert $ i `notElem` stf
+notContains :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => (ByteString -> Stuffed a) -> Word8 -> ByteString -> Proxy a -> PropertyT Identity ()
+notContains stuff i bs _ = assert $ i `notElem` stf
     where
         stf = unwrap (stuff bs :: Stuffed a)
 
