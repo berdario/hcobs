@@ -66,4 +66,4 @@ benchmark mainbench
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/hcobs
+  location: https://github.com/berdario/hcobs

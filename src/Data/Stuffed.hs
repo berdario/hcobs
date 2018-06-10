@@ -31,10 +31,10 @@ import           Data.Proxy               (Proxy (..))
 import           Data.Reflection          (reflect)
 import           Data.Word                (Word8)
 import           GHC.Generics             (Generic)
-import           GHC.TypeLits             (CmpNat, KnownNat)
 import           GHC.Types                (Nat)
 import           Prelude                  hiding (concat, length, null, splitAt)
 
+import           Data.Stuffed.Internal    (IsByte)
 
 newtype Stuffed (a :: Nat) = Stuffed ByteString
     deriving (Eq, Ord, Show, Monoid, Generic)
@@ -45,7 +45,7 @@ splitEvery n bs = toStrict start : splitEvery n rest
     where
         (start, rest) = splitAt n bs
 
-stuff :: forall a. (KnownNat a, CmpNat a 256 ~ 'LT) => ByteString -> Stuffed a
+stuff :: forall a. IsByte a => ByteString -> Stuffed a
 stuff bs = Stuffed $ fromChunks chunks
     where
         excluded = fromIntegral (reflect (Proxy :: Proxy a) :: Integer)
@@ -62,7 +62,7 @@ buildStuffed excluded bs = B.cons last stuffed
 toOffset :: Word8 -> Word8 -> Int64
 toOffset excluded b = fromIntegral $ b - 1 - excluded
 
-unstuff :: forall a. (KnownNat a) => Stuffed a -> ByteString
+unstuff :: forall a. IsByte a => Stuffed a -> ByteString
 unstuff (Stuffed bs) = toLazyByteString $ mconcat chunks
     where
         excluded = fromIntegral (reflect (Proxy :: Proxy a) :: Integer)
