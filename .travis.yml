@@ -1,1 +1,7 @@
 language: nix
+script: nix build --argstr compiler $COMPILER
+env:
+- COMPILER=ghc802
+- COMPILER=ghc822
+- COMPILER=ghc844
+- COMPILER=ghc861

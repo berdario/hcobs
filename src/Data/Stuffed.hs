@@ -17,18 +17,13 @@ module Data.Stuffed
     where
 
 import qualified Data.ByteString          as B
-import           Data.ByteString.Builder  (Builder, byteString, lazyByteString,
-                                           shortByteString, toLazyByteString,
-                                           word8)
-import           Data.ByteString.Internal (memcpy, unsafeCreate)
-import qualified Data.ByteString.Internal as BI
-import           Data.ByteString.Lazy     (ByteString, fromChunks, fromStrict,
-                                           length, null, split, splitAt,
-                                           toStrict, uncons)
+import           Data.ByteString.Builder  (Builder, byteString, toLazyByteString)
+import           Data.ByteString.Lazy     (ByteString, fromChunks, splitAt,
+                                           toStrict)
 import           Data.Int                 (Int64)
-import           Data.Monoid              ((<>))
 import           Data.Proxy               (Proxy (..))
 import           Data.Reflection          (reflect)
+import           Data.Semigroup           (Semigroup)
 import           Data.Word                (Word8)
 import           GHC.Generics             (Generic)
 import           GHC.Types                (Nat)
@@ -37,7 +32,7 @@ import           Prelude                  hiding (concat, length, null, splitAt)
 import           Data.Stuffed.Internal    (IsByte)
 
 newtype Stuffed (a :: Nat) = Stuffed ByteString
-    deriving (Eq, Ord, Show, Monoid, Generic)
+    deriving (Eq, Ord, Show, Semigroup, Monoid, Generic)
 
 splitEvery :: Int64 -> ByteString -> [B.ByteString]
 splitEvery _ "" = []
@@ -59,9 +54,6 @@ buildStuffed excluded bs = B.cons last stuffed
                                | otherwise = (n + 1, current)
         (last, stuffed) = B.mapAccumR swapExcluded excludedOffset bs
 
-toOffset :: Word8 -> Word8 -> Int64
-toOffset excluded b = fromIntegral $ b - 1 - excluded
-
 unstuff :: forall a. IsByte a => Stuffed a -> ByteString
 unstuff (Stuffed bs) = toLazyByteString $ mconcat chunks
     where
@@ -71,7 +63,7 @@ unstuff (Stuffed bs) = toLazyByteString $ mconcat chunks
 
 rebuildChunk :: Word8 -> Maybe (Word8, B.ByteString) -> Builder -> Builder
 rebuildChunk _ Nothing b = b
-rebuildChunk excluded (Just (starting_offset, rest)) b = byteString $ snd $ B.mapAccumL swapExcluded (starting_offset - 1) rest
+rebuildChunk excluded (Just (starting_offset, rest)) _ = byteString $ snd $ B.mapAccumL swapExcluded (starting_offset - 1) rest
     where
         swapExcluded n current | n == excluded = (current - 1, excluded)
                                | otherwise = (n - 1, current)
