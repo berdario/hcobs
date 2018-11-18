@@ -3,6 +3,7 @@ script: nix build -v --argstr compiler $COMPILER --arg nixpkgs "import (fetchTar
 env:
   global:
     - CHANNEL_HASH=0249f7d48afcab7b8e4e73c9444718f28f5f68a2
+    - secure: "DpOqDLByTN8yyDozbpXAUl6EP498t1q6E40uddQ3wakivhYcgiHbRy6FtcNbUPSiXpEYZLTjyxnFGrNjn5xi/zircXMe6XuTN1f8F1CUz6eTvgnuLmBrT/gCAnHcMHbm+PkJlC9WRkcXWzrrxybf6HFdwlFDgQIXM9MXEakcI0Ei1poP4JxCs5+zBP9+uivlveqVYw/Msc1l+b3BHzqKJ+Arrit3+UwntsGYFAOGOUpWQ659EMGk24w0cEi/1GRKynvENNY4lNttUO4/Yw3WwTLb6qRZfAzzL3hYYT53PHufWZ/nvNlqlZVZRGxU4IurR5Xu7UrMPv7nYWd4M/qJGkARIxOtaQ4WzgKl9gIhts2eQuD8zFh5wQo7mDVuGXXlL9f/kQTylVvkH7YJEHNj4ULSZIgQfkmZNhQbswyHj33U9oyt3vDl5iwTGBcskaM/IZMDdE64XnXh8uR8OY0EkORR9L3cfKGyv1kJ/VS4r6cvOnZXCSH02ijuGfHe/JK/35W1uwj851Bm93yIXDfc//f//od7uXz4/Ww71AiOD1Dda5ST/Rf8eBAZmV274vHcx1n0X/Il/tlSOtOFnJq0pXNkVUt0m6KSAyzFBm+5pxrvoTh0s0JJlPlqq8iLrWotLrQlaOX/a79Ur++87t7CE4kpFrSii13RO/1wC9vHKpc="
   matrix:
     - COMPILER=ghc802 CHANNEL_HASH=24a7883c2349af5076107dbbb615be09d6025a95
     - COMPILER=ghc822
@@ -11,10 +12,8 @@ env:
     - COMPILER=ghc862 CHANNEL_HASH=nixos-unstable TRAVIS_ALLOW_FAILURE=true
 
 deploy:
-  provider: hackage
-  username: "berdario"
-  password:
-    secure: "TgYUKtFUJucRjTGZ63Y633UJsrarQSb66OB5txWJzOx6v2Q5Nw30/GuKVyDSoVsiHjJwHLzJvQx2E+lVmrCOAnQ1FGH1uqHTuGP+7T01HG4bSnnDOBm2Ejxbhhwq81oNvKZJ1MjOErO9a9Lp++hSjmXPeXIWGr00jRTmlD7zsRRcoSx9y6LNpVYelFez5gFPgs1FSzGmj4yjtO42/9tZ5D5uenkmftB7MUdDu5Klz++TFC9FNGla6Tn7epEDWHso36z/G8S2HHSrQrQF6RGoRxw0xi9wYfn+OlFGazAe7iUYypVbJRGRTqEmtVnRIRFDY7KLBwid+1A+FrA292WCxmMWSsmWduh4xQ1ev1IDUHva0ecSH5IKlrduNi0Dd2+Tfk7t96xzHjBmKCXOVSM9DHLvqx2UcbyzCCJnjDplEAKCzZsuBwibN8bTaOqM5+puB/6MBWPseyRPvcv62Szw8E1ED1v99qEDjQR253LsnucUtfZV+BMjJWpSGLMRLsPMGVARyPyQVHd5IKhs5YTaFVOi1Wd5luU0+ai8C7RW+Q+Gq+ozOV1W92BMeWLms8qwmtHX3D/cX0+cTI/W0GDy72JzXt2hSkMr3blTg+qiddm3ciTwoV3pkaLgVOQObm7aIRx0JiqOdGhM4AH0YEBSMVM9a7LoDJyWS52Rhw6vEao="
+  provider: script
+  script: nix run nixpkgs.cabal-install -c ./deploy.sh
   on:
     condition:
       - $COMPILER == ghc862 && $TRAVIS_ALLOW_FAILURE != true
