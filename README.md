@@ -24,7 +24,3 @@ You can try this out in ghci with:
     [2,97,2,98,2,99]
     > unpack $ unstuff stuffedBytes
     [97,0,98,0,99]
-
-To build with Nix, Travis CI is using nixpkgs-unstable (which provides Hedgehog 0.5), to use nixpkgs-unstable locally as well, you might want to run:
-
-    nix-build --arg nixpkgs 'import (fetchTarball "https://github.com/NixOS/nixpkgs-channels/archive/nixpkgs-unstable.tar.gz#1") {}'

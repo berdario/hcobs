@@ -8,3 +8,13 @@ env:
     - COMPILER=ghc822
     - COMPILER=ghc844
     - COMPILER=ghc862
+    - COMPILER=ghc862 CHANNEL_HASH=nixos-unstable TRAVIS_ALLOW_FAILURE=true
+
+deploy:
+  provider: hackage
+  username: "berdario"
+  password:
+    secure: "TgYUKtFUJucRjTGZ63Y633UJsrarQSb66OB5txWJzOx6v2Q5Nw30/GuKVyDSoVsiHjJwHLzJvQx2E+lVmrCOAnQ1FGH1uqHTuGP+7T01HG4bSnnDOBm2Ejxbhhwq81oNvKZJ1MjOErO9a9Lp++hSjmXPeXIWGr00jRTmlD7zsRRcoSx9y6LNpVYelFez5gFPgs1FSzGmj4yjtO42/9tZ5D5uenkmftB7MUdDu5Klz++TFC9FNGla6Tn7epEDWHso36z/G8S2HHSrQrQF6RGoRxw0xi9wYfn+OlFGazAe7iUYypVbJRGRTqEmtVnRIRFDY7KLBwid+1A+FrA292WCxmMWSsmWduh4xQ1ev1IDUHva0ecSH5IKlrduNi0Dd2+Tfk7t96xzHjBmKCXOVSM9DHLvqx2UcbyzCCJnjDplEAKCzZsuBwibN8bTaOqM5+puB/6MBWPseyRPvcv62Szw8E1ED1v99qEDjQR253LsnucUtfZV+BMjJWpSGLMRLsPMGVARyPyQVHd5IKhs5YTaFVOi1Wd5luU0+ai8C7RW+Q+Gq+ozOV1W92BMeWLms8qwmtHX3D/cX0+cTI/W0GDy72JzXt2hSkMr3blTg+qiddm3ciTwoV3pkaLgVOQObm7aIRx0JiqOdGhM4AH0YEBSMVM9a7LoDJyWS52Rhw6vEao="
+  on:
+    condition:
+      - $COMPILER == ghc862 && $TRAVIS_ALLOW_FAILURE != true
