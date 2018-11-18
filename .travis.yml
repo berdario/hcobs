@@ -1,7 +1,10 @@
 language: nix
-script: nix build --argstr compiler $COMPILER
+script: nix build -v --argstr compiler $COMPILER --arg nixpkgs "import (fetchTarball ''https://github.com/NixOS/nixpkgs-channels/archive/$CHANNEL_HASH.tar.gz'') {}"
 env:
-- COMPILER=ghc802
-- COMPILER=ghc822
-- COMPILER=ghc844
-- COMPILER=ghc861
+  global:
+    - CHANNEL_HASH=0249f7d48afcab7b8e4e73c9444718f28f5f68a2
+  matrix:
+    - COMPILER=ghc802 CHANNEL_HASH=24a7883c2349af5076107dbbb615be09d6025a95
+    - COMPILER=ghc822
+    - COMPILER=ghc844
+    - COMPILER=ghc862
