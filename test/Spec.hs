@@ -10,7 +10,7 @@ import Control.Monad.Identity (Identity)
 import Control.Monad.Morph    (generalize, hoist)
 import Data.ByteString.Lazy (ByteString, length, notElem, fromStrict)
 import Data.Proxy (Proxy(..))
-import Data.Reflection (Reifies, reflect, reifyNat)
+import Data.Reflection (reflect, reifyNat)
 import Data.Word (Word8)
 import GHC.Exts (Constraint)
 import GHC.TypeLits (KnownNat, CmpNat)
@@ -20,7 +20,6 @@ import Hedgehog.Range (constant, constantBounded)
 import Prelude hiding (length, notElem)
 import System.Exit (exitFailure)
 import Unsafe.Coerce (unsafeCoerce)
-import System.IO.Unsafe
 
 import Data.Stuffed (Stuffed, stuff, unstuff, unwrap)
 

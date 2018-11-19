@@ -1,5 +1,5 @@
 name:                hcobs
-version:             0.1.0.0
+version:             0.1.0.1
 synopsis:            An implementation of the Consistent Overhead Byte Stuffing algorithm
 description:         An implementation of the Consistent Overhead Byte Stuffing algorithm.
 homepage:            https://github.com/berdario/hcobs#readme

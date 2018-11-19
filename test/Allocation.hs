@@ -13,7 +13,7 @@ import Weigh (mainWith, func)
 
 instance NFData (Stuffed a)
 
-stuffZero :: _ -> Stuffed 0
+stuffZero :: BSL.ByteString -> Stuffed 0
 stuffZero = stuff
 
 main :: IO ()

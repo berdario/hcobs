@@ -4,7 +4,7 @@
 
 Haskell implementation of the [Consistent Overhead Byte Stuffing](https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing) algorithm.
 
-It provides a `Stuffed` newtype wrapper for Lazy Bytestrings, which is parametrized on the Byte (Word8, representated as a type-level Nat) to be encoded away.
+It provides a `Stuffed` newtype wrapper for Lazy Bytestrings, which is parametrized on the Byte (Word8, represented as a type-level Nat) to be encoded away.
 
 The implementation tries to be as efficient as possible, type safe and easy to use. If you have a "sink" like
 
