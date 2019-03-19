@@ -9,7 +9,7 @@ env:
     - COMPILER=ghc822
     - COMPILER=ghc844
     - COMPILER=ghc862
-    - COMPILER=ghc862 CHANNEL_HASH=nixos-unstable TRAVIS_ALLOW_FAILURE=true
+    - COMPILER=default CHANNEL_HASH=nixos-unstable TRAVIS_ALLOW_FAILURE=true
 
 deploy:
   provider: script
