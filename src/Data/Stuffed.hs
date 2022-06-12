@@ -37,7 +37,8 @@ module Data.Stuffed
     where
 
 import qualified Data.ByteString          as B
-import           Data.ByteString.Builder  (Builder, byteString, toLazyByteString)
+import           Data.ByteString.Builder  (Builder, byteString)
+
 import           Data.ByteString.Lazy     (ByteString, fromChunks, splitAt,
                                            toStrict)
 import           Data.Int                 (Int64)
@@ -47,9 +48,9 @@ import           Data.Semigroup           (Semigroup)
 import           Data.Word                (Word8)
 import           GHC.Generics             (Generic)
 import           GHC.Types                (Nat)
-import           Prelude                  hiding (concat, length, null, splitAt, last)
+import           Prelude                  hiding (concat, null, splitAt, last)
 
-import           Data.Stuffed.Internal    (IsByte)
+import           Data.Stuffed.Internal    (IsByte, toLazyByteString)
 
 -- | Wrapper for Lazy Bytestrings, parametrized on the Byte (Word8, represented as a type-level 'Nat') to be encoded away.
 newtype Stuffed (a :: Nat) = Stuffed ByteString
