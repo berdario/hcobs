@@ -14,7 +14,7 @@ import Data.ByteString.Builder.Extra (lazyByteStringInsert, toLazyByteStringWith
 import Data.ByteString.Builder.Internal (Builder, newBuffer, customStrategy, smallChunkSize, defaultChunkSize)
 import Data.ByteString.Lazy (ByteString)
 import GHC.TypeLits (CmpNat, ErrorMessage (..), KnownNat, TypeError)
-import GHC.Types (Nat)
+import GHC.TypeNats (Nat)
 
 type IsByte a = (KnownNat a, IsByteLT a (CmpNat a 256) ~ 'True)
 

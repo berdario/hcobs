@@ -47,7 +47,7 @@ import           Data.Reflection          (reflect)
 import           Data.Semigroup           (Semigroup)
 import           Data.Word                (Word8)
 import           GHC.Generics             (Generic)
-import           GHC.Types                (Nat)
+import           GHC.TypeNats             (Nat)
 import           Prelude                  hiding (concat, null, splitAt, last)
 
 import           Data.Stuffed.Internal    (IsByte, toLazyByteString)

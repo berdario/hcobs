@@ -6,7 +6,7 @@ let
 
   f = { mkDerivation, base, base64-bytestring, bytestring
       , containers, criterion, deepseq, ghc-prim, hedgehog, mmorph, mtl
-      , reflection, stdenv, weigh
+      , reflection, stdenv, weigh, lib
       }:
       mkDerivation {
         pname = "hcobs";
@@ -23,7 +23,7 @@ let
           base base64-bytestring bytestring criterion ghc-prim reflection
         ];
         homepage = "https://github.com/berdario/hcobs#readme";
-        license = stdenv.lib.licenses.bsd3;
+        license = lib.licenses.bsd3;
       };
 
   haskellPackages = if compiler == "default"

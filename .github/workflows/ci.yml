@@ -1,0 +1,40 @@
+name: "test and deploy"
+on:
+  pull_request:
+  push:
+  schedule:
+    - cron: '32 7 1 * *'
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler: [ghc884, ghc8107, ghc902, ghc923]
+        channel: [55b8202e6661d3e1cd56058fff56a025eee0174b]
+        include:
+          - compiler: ghc822
+            channel: 0249f7d48afcab7b8e4e73c9444718f28f5f68a2
+          - compiler: ghc844
+            channel: 0249f7d48afcab7b8e4e73c9444718f28f5f68a2
+          - compiler: ghc862
+            channel: 0249f7d48afcab7b8e4e73c9444718f28f5f68a2
+          - compiler: default
+            channel: nixos-unstable
+            experimental: true
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - uses: cachix/install-nix-action@v15
+    - run: nix-build -v --argstr compiler ${{ matrix.compiler }} --arg nixpkgs "import (fetchTarball ''https://github.com/NixOS/nixpkgs/archive/${{ matrix.channel }}.tar.gz'') {}"
+      continue-on-error: ${{ matrix.experimental || false }}
+  deploy:
+    needs: tests
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - uses: cachix/install-nix-action@v15
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - run: nix shell nixpkgs#cabal-install -c ./deploy.sh
+      env:
+        APIKEY: ${{ secrets.APIKEY }}

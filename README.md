@@ -1,6 +1,7 @@
 # hcobs
 
-[![Build Status](https://travis-ci.org/berdario/hcobs.svg?branch=master)](https://travis-ci.org/berdario/hcobs)
+![Build Status](https://github.com/berdario/hcobs/actions/workflows/ci.yml/badge.svg?branch=master)
+
 
 Haskell implementation of the [Consistent Overhead Byte Stuffing](https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing) algorithm.
 
