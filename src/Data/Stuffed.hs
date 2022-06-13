@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE ScopedTypeVariables        #-}
 {-# LANGUAGE TypeInType                 #-}
-
+{-# LANGUAGE DerivingStrategies         #-}
 {-# LANGUAGE DataKinds                  #-}
 {-# LANGUAGE KindSignatures             #-}
 
@@ -54,7 +54,8 @@ import           Data.Stuffed.Internal    (IsByte, toLazyByteString)
 
 -- | Wrapper for Lazy Bytestrings, parametrized on the Byte (Word8, represented as a type-level 'Nat') to be encoded away.
 newtype Stuffed (a :: Nat) = Stuffed ByteString
-    deriving (Eq, Ord, Show, Semigroup, Monoid, Generic)
+    deriving stock (Eq, Ord, Show, Generic)
+    deriving newtype (Semigroup, Monoid)
 
 splitEvery :: Int64 -> ByteString -> [B.ByteString]
 splitEvery _ "" = []

@@ -5,7 +5,7 @@ let
   inherit (nixpkgs) pkgs;
 
   f = { mkDerivation, base, base64-bytestring, bytestring
-      , containers, criterion, deepseq, ghc-prim, hedgehog, mmorph, mtl
+      , criterion, deepseq, hedgehog, mmorph, mtl
       , reflection, stdenv, weigh, lib
       }:
       mkDerivation {
@@ -13,14 +13,14 @@ let
         version = "0.1.0.0";
         src = ./.;
         libraryHaskellDepends = [
-          base bytestring containers ghc-prim reflection
+          base bytestring reflection
         ];
         testHaskellDepends = [
-          base base64-bytestring bytestring deepseq ghc-prim hedgehog mmorph
+          base base64-bytestring bytestring deepseq hedgehog mmorph
           mtl reflection weigh
         ];
         benchmarkHaskellDepends = [
-          base base64-bytestring bytestring criterion ghc-prim reflection
+          base base64-bytestring bytestring criterion reflection
         ];
         homepage = "https://github.com/berdario/hcobs#readme";
         license = lib.licenses.bsd3;

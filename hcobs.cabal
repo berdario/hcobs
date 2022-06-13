@@ -19,7 +19,6 @@ library
                      , Data.Stuffed.Internal
   build-depends:       base >= 4.7 && < 5
                      , bytestring
-                     , containers
                      , reflection
                      , ghc-prim
   ghc-options:         -Weverything
